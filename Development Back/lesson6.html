@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 06 - HATEOAS</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>:root{--primary-blue:#3b82f6;--dark-bg:#020617;--card-bg:rgba(255,255,255,0.05);--border-light:rgba(255,255,255,0.12);--text-main:#e5e7eb;--text-dim:#94a3b8;--accent-green:#4ed9c2;--accent-cyan:#4ed9c2}[data-theme="light"]{--primary-blue:#3b82f6;--dark-bg:#f8fafc;--card-bg:#ffffff;--border-light:rgba(15,23,42,0.12);--text-main:#0f172a;--text-dim:#64748b;--accent-green:#06b6d4;--accent-cyan:#06b6d4}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:var(--dark-bg);color:var(--text-main);min-height:100vh;line-height:1.6;transition:background-color .3s ease,color .3s ease}.top-bar{background:var(--card-bg);backdrop-filter:blur(12px);padding:18px 5%;border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000}.top-bar h2{color:var(--text-main);margin:0;font-size:1.5rem}.exit-link{color:var(--text-dim);text-decoration:none;font-weight:700;font-size:.95rem;transition:color .3s ease}.exit-link:hover{color:var(--text-main)}.theme-toggle{background:rgba(255,255,255,0.1);border:1px solid var(--border-light);border-radius:12px;padding:8px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;color:var(--text-main);font-weight:600;font-size:.9rem;transition:all .2s ease;margin-left:auto}.theme-toggle:hover{background:rgba(255,255,255,0.15);transform:translateY(-2px)}.theme-toggle svg{width:20px;height:20px}.hero{text-align:center;padding:80px 20px 60px}.hero .badge{color:var(--accent-green);font-weight:800;font-size:.9rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}.hero h1{font-size:3.2rem;font-weight:800;background:linear-gradient(to right,var(--text-main),var(--primary-blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}.hero p{color:var(--text-dim);font-size:1.15rem;max-width:600px;margin:0 auto}.timeline-nav{display:flex;justify-content:center;gap:25px;position:relative;margin:50px 0 70px;padding:0 5%;flex-wrap:wrap}.timeline-line{position:absolute;top:20px;left:10%;right:10%;height:3px;background:var(--border-light);z-index:1}.step-node{position:relative;z-index:2;text-align:center;cursor:pointer;min-width:80px}.dot{width:48px;height:48px;background:var(--dark-bg);border:3px solid var(--border-light);border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.3rem;color:var(--text-dim);transition:all .35s ease}.step-node.active .dot,.step-node:hover .dot{background:var(--primary-blue);border-color:var(--primary-blue);color:white;box-shadow:0 0 24px rgba(59,130,246,0.5);transform:scale(1.12)}.node-label{font-size:.7rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px}.step-node.active .node-label{color:var(--text-main)}.step-content{display:none;max-width:1000px;margin:0 auto;padding:0 25px 80px;animation:fadeIn .5s ease}.step-content.active{display:block}@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}h2{font-size:2.4rem;margin-bottom:28px;color:var(--text-main);font-weight:800}h3{font-size:1.6rem;margin:32px 0 16px 0;color:var(--text-main);font-weight:700}.theory-box{background:var(--card-bg);border:1px solid var(--border-light);border-radius:16px;padding:28px;margin-bottom:36px;color:var(--text-dim);font-size:1.1rem;line-height:1.8}.highlight-box{background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(168,85,247,0.15));border-left:4px solid var(--primary-blue);padding:20px 24px;margin:28px 0;border-radius:8px;color:var(--text-main);font-weight:500}.step-content p{color:var(--text-dim);margin-bottom:20px;font-size:1.05rem;line-height:1.75}.step-content strong{color:var(--text-main);font-weight:700}code{background:rgba(59,130,246,0.1);padding:2px 8px;border-radius:4px;font-family:'Fira Code',monospace;font-size:.95em;color:var(--accent-cyan)}.code-block{background:rgba(0,0,0,0.3);border:1px solid var(--border-light);border-radius:12px;padding:20px;margin:24px 0;font-family:'Fira Code',monospace;font-size:.9rem;overflow-x:auto;color:var(--accent-cyan);line-height:1.6;white-space:pre-wrap}ul{margin:20px 0;padding-left:24px}ul li{margin:12px 0;color:var(--text-dim);line-height:1.7}footer{text-align:center;padding:40px 20px;color:var(--text-dim);font-size:.9rem;border-top:1px solid var(--border-light);margin-top:60px}footer p{margin:8px 0}</style>
+</head>
+<body>
+<nav class="top-bar">
+        <a href="../../../../index.html" class="logo-link">
+            <img src="../../../../logo.jpeg" alt="Logo" class="site-logo">
+        </a>
+        <a href="../../../../index.html" style="text-decoration: none;">
+            <h2 style="color: white; margin: 0;">Digital Marketing</h2>
+        </a>
+        <a href="apis-lecture.html" class="exit-link">← Back to Syllabus</a>
+        <h2>HATEOAS</h2>
+<button class="theme-toggle" id="themeToggle">
+<svg class="sun-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+<svg class="moon-icon" fill="currentColor" viewBox="0 0 24 24" style="display:none;"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+</button>
+</nav>
+<div class="hero">
+<div class="badge">Lesson 06</div>
+<h1>HATEOAS</h1>
+<p>Hypertext as the Engine of Application State</p>
+</div>
+<div class="lesson-container">
+<nav class="timeline-nav">
+<div class="timeline-line"></div>
+<div class="step-node active" onclick="showStep(0)"><div class="dot">1</div><div class="node-label">Concept</div></div>
+<div class="step-node" onclick="showStep(1)"><div class="dot">2</div><div class="node-label">Why HATEOAS</div></div>
+<div class="step-node" onclick="showStep(2)"><div class="dot">3</div><div class="node-label">JSON Example</div></div>
+<div class="step-node" onclick="showStep(3)"><div class="dot">4</div><div class="node-label">Link Structure</div></div>
+<div class="step-node" onclick="showStep(4)"><div class="dot">5</div><div class="node-label">State Machine</div></div>
+</nav>
+<div class="step-content active">
+<h2>What is HATEOAS?</h2>
+<div class="theory-box">One of the primary reasons to use REST is the ability to navigate the entire set of resources without prior knowledge of the URI schema. This principle is known as <strong>HATEOAS</strong>, or <strong>Hypertext as the Engine of Application State</strong>.</div>
+<p>The system is effectively a finite state machine, and the response to each request contains the information necessary to move from one state to another.</p>
+<div class="highlight-box"><strong>Key Principle:</strong> Each HTTP GET request should return the information necessary to find the resources related directly to the requested object through hyperlinks included in the response.</div>
+<h3>Core Concept</h3>
+<ul>
+<li>Client doesn't need to know URI structure in advance</li>
+<li>Server provides available actions via hyperlinks</li>
+<li>Responses contain navigation information</li>
+<li>API becomes self-documenting and discoverable</li>
+</ul>
+</div>
+<div class="step-content">
+<h2>Why Use HATEOAS?</h2>
+<div class="theory-box">HATEOAS enables clients to navigate an API dynamically, without hard-coding URIs or understanding the entire API structure upfront.</div>
+<h3>Benefits</h3>
+<ul>
+<li><strong>Decoupling:</strong> Clients don't need to know URI patterns</li>
+<li><strong>Evolvability:</strong> Server can change URIs without breaking clients</li>
+<li><strong>Discoverability:</strong> Clients discover available actions from responses</li>
+<li><strong>Self-documentation:</strong> API responses show what's possible</li>
+<li><strong>Reduced coupling:</strong> Changes to URI structure don't affect clients</li>
+</ul>
+<div class="highlight-box"><strong>Note:</strong> There are no general-purpose standards that define how to model the HATEOAS principle. The examples shown are one possible, proprietary solution.</div>
+</div>
+<div class="step-content">
+<h2>HATEOAS JSON Example</h2>
+<p>For example, to handle the relationship between an order and a customer, the representation of an order might include links that identify the available operations:</p>
+<div class="code-block">{
+  "orderID": 3,
+  "productID": 2,
+  "quantity": 4,
+  "orderValue": 16.60,
+  "links": [
+    {
+      "rel": "customer",
+      "href": "https://api.contoso.com/customers/3",
+      "action": "GET",
+      "types": ["text/xml", "application/json"]
+    },
+    {
+      "rel": "customer",
+      "href": "https://api.contoso.com/customers/3",
+      "action": "PUT",
+      "types": ["application/x-www-form-urlencoded"]
+    },
+    {
+      "rel": "customer",
+      "href": "https://api.contoso.com/customers/3",
+      "action": "DELETE",
+      "types": []
+    },
+    {
+      "rel": "self",
+      "href": "https://api.contoso.com/orders/3",
+      "action": "GET",
+      "types": ["text/xml", "application/json"]
+    }
+  ]
+}</div>
+<p>The <code>links</code> array contains a set of links. Each link represents an operation on a related entity.</p>
+</div>
+<div class="step-content">
+<h2>Link Structure Explained</h2>
+<div class="theory-box">Each link in the <code>links</code> array contains specific information that the client application needs to invoke the operation.</div>
+<h3>Link Components</h3>
+<ul>
+<li><code><strong>rel</strong></code> - The relationship ("customer", "self", "next", "prev")</li>
+<li><code><strong>href</strong></code> - The URI to access the resource</li>
+<li><code><strong>action</strong></code> - The HTTP method (GET, POST, PUT, DELETE)</li>
+<li><code><strong>types</strong></code> - Supported MIME types for the operation</li>
+</ul>
+<h3>Common Relationship Types</h3>
+<table style="width:100%;border-collapse:collapse;margin:28px 0;background:var(--card-bg);border-radius:12px;overflow:hidden">
+<thead><tr><th style="background:rgba(59,130,246,0.15);padding:16px;text-align:left;font-weight:700;color:var(--text-main);border-bottom:2px solid var(--border-light)">Relation</th><th style="background:rgba(59,130,246,0.15);padding:16px;text-align:left;font-weight:700;color:var(--text-main);border-bottom:2px solid var(--border-light)">Meaning</th></tr></thead>
+<tbody>
+<tr style="border-bottom:1px solid var(--border-light)"><td style="padding:16px;color:var(--text-dim)"><code>self</code></td><td style="padding:16px;color:var(--text-dim)">Link to the current resource</td></tr>
+<tr style="border-bottom:1px solid var(--border-light)"><td style="padding:16px;color:var(--text-dim)"><code>next</code></td><td style="padding:16px;color:var(--text-dim)">Link to the next page</td></tr>
+<tr style="border-bottom:1px solid var(--border-light)"><td style="padding:16px;color:var(--text-dim)"><code>prev</code></td><td style="padding:16px;color:var(--text-dim)">Link to the previous page</td></tr>
+<tr style="border-bottom:1px solid var(--border-light)"><td style="padding:16px;color:var(--text-dim)"><code>customer</code></td><td style="padding:16px;color:var(--text-dim)">Link to related customer resource</td></tr>
+<tr><td style="padding:16px;color:var(--text-dim)"><code>items</code></td><td style="padding:16px;color:var(--text-dim)">Link to collection of items</td></tr>
+</tbody>
+</table>
+</div>
+<div class="step-content">
+<h2>Application State Machine</h2>
+<div class="theory-box">The set of links that are returned can change depending on the state of the resource. The idea that hypertext is the engine of application state describes this scenario.</div>
+<h3>Dynamic Links Based on State</h3>
+<p>For example, an order might have different available actions depending on its status:</p>
+<div class="code-block">// Order status: "pending"
+{
+  "orderID": 3,
+  "status": "pending",
+  "links": [
+    {"rel": "cancel", "href": "/orders/3", "action": "DELETE"},
+    {"rel": "update", "href": "/orders/3", "action": "PUT"},
+    {"rel": "submit", "href": "/orders/3/submit", "action": "POST"}
+  ]
+}
+
+// Order status: "shipped"
+{
+  "orderID": 3,
+  "status": "shipped",
+  "links": [
+    {"rel": "track", "href": "/orders/3/tracking", "action": "GET"},
+    {"rel": "return", "href": "/orders/3/return", "action": "POST"}
+  ]
+  // Note: No cancel or update links - order can't be changed
+}</div>
+<h3>Workflow Control</h3>
+<ul>
+<li>Server controls available transitions</li>
+<li>Client discovers actions from response</li>
+<li>Links change based on business rules</li>
+<li>Prevents invalid state transitions</li>
+</ul>
+<div class="highlight-box"><strong>Best Practice:</strong> Include only the links that are valid for the current state of the resource. This prevents clients from attempting invalid operations.</div>
+</div>
+</div>
+<footer>
+<p>RESTful APIs Course • Lecture 4</p>
+<p>HATEOAS Implementation</p>
+</footer>
+<script>function showStep(index){document.querySelectorAll('.step-node').forEach((node,i)=>{i===index?node.classList.add('active'):node.classList.remove('active')});document.querySelectorAll('.step-content').forEach((content,i)=>{i===index?content.classList.add('active'):content.classList.remove('active')})}(function(){const savedTheme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',savedTheme)})();const themeToggle=document.getElementById('themeToggle');const sunIcon=document.querySelector('.sun-icon');const moonIcon=document.querySelector('.moon-icon');const html=document.documentElement;const currentTheme=localStorage.getItem('theme')||'dark';html.setAttribute('data-theme',currentTheme);if(currentTheme==='light'){sunIcon.style.display='none';moonIcon.style.display='block'}themeToggle.addEventListener('click',function(){const theme=html.getAttribute('data-theme');const newTheme=theme==='dark'?'light':'dark';html.setAttribute('data-theme',newTheme);localStorage.setItem('theme',newTheme);if(newTheme==='light'){sunIcon.style.display='none';moonIcon.style.display='block'}else{sunIcon.style.display='block';moonIcon.style.display='none'}});</script>
+</body>
+</html>

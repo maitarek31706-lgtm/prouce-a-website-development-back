@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 03 - Asynchronous Operations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+:root{--primary-blue:#3b82f6;--dark-bg:#020617;--card-bg:rgba(255,255,255,0.05);--border-light:rgba(255,255,255,0.12);--text-main:#e5e7eb;--text-dim:#94a3b8;--accent-green:#4ed9c2;--accent-cyan:#4ed9c2}[data-theme="light"]{--primary-blue:#3b82f6;--dark-bg:#f8fafc;--card-bg:#ffffff;--border-light:rgba(15,23,42,0.12);--text-main:#0f172a;--text-dim:#64748b;--accent-green:#06b6d4;--accent-cyan:#06b6d4}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:var(--dark-bg);color:var(--text-main);min-height:100vh;line-height:1.6;transition:background-color .3s ease,color .3s ease}.top-bar{background:var(--card-bg);backdrop-filter:blur(12px);padding:18px 5%;border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000}.top-bar h2{color:var(--text-main);margin:0;font-size:1.5rem}.exit-link{color:var(--text-dim);text-decoration:none;font-weight:700;font-size:.95rem;transition:color .3s ease}.exit-link:hover{color:var(--text-main)}.theme-toggle{background:rgba(255,255,255,0.1);border:1px solid var(--border-light);border-radius:12px;padding:8px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;color:var(--text-main);font-weight:600;font-size:.9rem;transition:all .2s ease;margin-left:auto}.theme-toggle:hover{background:rgba(255,255,255,0.15);transform:translateY(-2px)}.theme-toggle svg{width:20px;height:20px}.hero{text-align:center;padding:80px 20px 60px}.hero .badge{color:var(--accent-green);font-weight:800;font-size:.9rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}.hero h1{font-size:3.2rem;font-weight:800;background:linear-gradient(to right,var(--text-main),var(--primary-blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}.hero p{color:var(--text-dim);font-size:1.15rem;max-width:600px;margin:0 auto}.timeline-nav{display:flex;justify-content:center;gap:25px;position:relative;margin:50px 0 70px;padding:0 5%;flex-wrap:wrap}.timeline-line{position:absolute;top:20px;left:10%;right:10%;height:3px;background:var(--border-light);z-index:1}.step-node{position:relative;z-index:2;text-align:center;cursor:pointer;min-width:80px}.dot{width:48px;height:48px;background:var(--dark-bg);border:3px solid var(--border-light);border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.3rem;color:var(--text-dim);transition:all .35s ease}.step-node.active .dot,.step-node:hover .dot{background:var(--primary-blue);border-color:var(--primary-blue);color:white;box-shadow:0 0 24px rgba(59,130,246,0.5);transform:scale(1.12)}.node-label{font-size:.7rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px}.step-node.active .node-label{color:var(--text-main)}.step-content{display:none;max-width:1000px;margin:0 auto;padding:0 25px 80px;animation:fadeIn .5s ease}.step-content.active{display:block}@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}h2{font-size:2.4rem;margin-bottom:28px;color:var(--text-main);font-weight:800}h3{font-size:1.6rem;margin:32px 0 16px 0;color:var(--text-main);font-weight:700}.theory-box{background:var(--card-bg);border:1px solid var(--border-light);border-radius:16px;padding:28px;margin-bottom:36px;color:var(--text-dim);font-size:1.1rem;line-height:1.8}.highlight-box{background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(168,85,247,0.15));border-left:4px solid var(--primary-blue);padding:20px 24px;margin:28px 0;border-radius:8px;color:var(--text-main);font-weight:500}.step-content p{color:var(--text-dim);margin-bottom:20px;font-size:1.05rem;line-height:1.75}.step-content strong{color:var(--text-main);font-weight:700}code{background:rgba(59,130,246,0.1);padding:2px 8px;border-radius:4px;font-family:'Fira Code',monospace;font-size:.95em;color:var(--accent-cyan)}.code-block{background:rgba(0,0,0,0.3);border:1px solid var(--border-light);border-radius:12px;padding:20px;margin:24px 0;font-family:'Fira Code',monospace;font-size:.9rem;overflow-x:auto;color:var(--accent-cyan);line-height:1.6}ul{margin:20px 0;padding-left:24px}ul li{margin:12px 0;color:var(--text-dim);line-height:1.7}table{width:100%;border-collapse:collapse;margin:28px 0;background:var(--card-bg);border-radius:12px;overflow:hidden}table th{background:rgba(59,130,246,0.15);padding:16px;text-align:left;font-weight:700;color:var(--text-main);border-bottom:2px solid var(--border-light)}table td{padding:16px;border-bottom:1px solid var(--border-light);color:var(--text-dim)}table tr:last-child td{border-bottom:none}table tr:hover{background:rgba(255,255,255,0.03)}footer{text-align:center;padding:40px 20px;color:var(--text-dim);font-size:.9rem;border-top:1px solid var(--border-light);margin-top:60px}footer p{margin:8px 0}
+    </style>
+</head>
+<body>
+<nav class="top-bar">
+        <a href="../../../../index.html" class="logo-link">
+            <img src="../../../../logo.jpeg" alt="Logo" class="site-logo">
+        </a>
+        <a href="../../../../index.html" style="text-decoration: none;">
+            <h2 style="color: white; margin: 0;">Digital Marketing</h2>
+        </a>
+        <a href="apis-lecture.html" class="exit-link">← Back to Syllabus</a>
+        <h2>Asynchronous Operations</h2>
+    <button class="theme-toggle" id="themeToggle">
+        <svg class="sun-icon" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+        <svg class="moon-icon" fill="currentColor" viewBox="0 0 24 24" style="display:none;">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+        </svg>
+    </button>
+</nav>
+
+<div class="hero">
+    <div class="badge">Lesson 03</div>
+    <h1>Asynchronous Operations</h1>
+    <p>Implementing async methods and handling long-running requests efficiently</p>
+</div>
+
+<div class="lesson-container">
+    <nav class="timeline-nav">
+        <div class="timeline-line"></div>
+        <div class="step-node active" onclick="showStep(0)"><div class="dot">1</div><div class="node-label">Introduction</div></div>
+        <div class="step-node" onclick="showStep(1)"><div class="dot">2</div><div class="node-label">202 Accepted</div></div>
+        <div class="step-node" onclick="showStep(2)"><div class="dot">3</div><div class="node-label">Status Polling</div></div>
+        <div class="step-node" onclick="showStep(3)"><div class="dot">4</div><div class="node-label">Completion</div></div>
+        <div class="step-node" onclick="showStep(4)"><div class="dot">5</div><div class="node-label">Best Practices</div></div>
+    </nav>
+
+    <div class="step-content active">
+        <h2>Why Asynchronous Operations?</h2>
+        <div class="theory-box">
+            Sometimes a POST, PUT, PATCH, or DELETE method might require processing that takes time to complete. If you wait for completion before sending a response to the client, it might cause unacceptable latency.
+        </div>
+        <p>In scenarios where operations take significant time, making the method asynchronous prevents blocking the client while the server processes the request.</p>
+        <div class="highlight-box">
+            <strong>Solution:</strong> Consider making the method asynchronous and return immediately with a status indicating the request has been accepted for processing.
+        </div>
+        <h3>When to Use Async Operations</h3>
+        <ul>
+            <li>Processing large data uploads</li>
+            <li>Generating complex reports</li>
+            <li>Batch operations on multiple resources</li>
+            <li>Video/image processing tasks</li>
+            <li>Integration with external services</li>
+            <li>Any operation that takes more than a few seconds</li>
+        </ul>
+    </div>
+
+    <div class="step-content">
+        <h2>HTTP 202 Accepted Status</h2>
+        <div class="theory-box">
+            An asynchronous method should return HTTP status code <code>202 (Accepted)</code> to indicate that the request was accepted for processing but is incomplete.
+        </div>
+        
+        <h3>Example Response</h3>
+        <div class="code-block">HTTP/1.1 202 Accepted
+Location: /api/status/12345</div>
+
+        <p>The <code>Location</code> header contains the URI of a status endpoint that the client can poll to check on the progress of the operation.</p>
+
+        <div class="highlight-box">
+            <strong>Key Point:</strong> The 202 response tells the client "I've received your request and I'm working on it, but it's not done yet."
+        </div>
+
+        <h3>Response Components</h3>
+        <ul>
+            <li><strong>Status Code:</strong> 202 (Accepted)</li>
+            <li><strong>Location Header:</strong> URI to check operation status</li>
+            <li><strong>Optional Body:</strong> Initial response data or confirmation</li>
+        </ul>
+    </div>
+
+    <div class="step-content">
+        <h2>Status Endpoint Polling</h2>
+        <div class="theory-box">
+            Expose an endpoint that returns the status of an asynchronous request so that the client can monitor the status by polling the status endpoint.
+        </div>
+
+        <h3>Checking Status</h3>
+        <p>If the client sends a GET request to the status endpoint, the response should contain the current status of the request:</p>
+
+        <div class="code-block">HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "status": "In progress",
+    "link": { 
+        "rel": "cancel", 
+        "method": "delete", 
+        "href": "/api/status/12345" 
+    }
+}</div>
+
+        <h3>Possible Status Values</h3>
+        <ul>
+            <li><code>"Pending"</code> - Request queued, not started</li>
+            <li><code>"In progress"</code> - Currently processing</li>
+            <li><code>"Completed"</code> - Successfully finished</li>
+            <li><code>"Failed"</code> - Operation encountered an error</li>
+            <li><code>"Cancelled"</code> - Operation was cancelled by user</li>
+        </ul>
+
+        <div class="highlight-box">
+            <strong>Optional Features:</strong> Include estimated time to completion or a link to cancel the operation for better user experience.
+        </div>
+    </div>
+
+    <div class="step-content">
+        <h2>Operation Completion</h2>
+        <div class="theory-box">
+            If the asynchronous operation creates a new resource, the status endpoint should return status code <code>303 (See Other)</code> after the operation completes.
+        </div>
+
+        <h3>Completion Response</h3>
+        <p>In the 303 response, include a Location header that gives the URI of the new resource:</p>
+
+        <div class="code-block">HTTP/1.1 303 See Other
+Location: /api/orders/12345</div>
+
+        <p>This tells the client that the operation is complete and they should navigate to the new resource location.</p>
+
+        <h3>Status Code Summary</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Status Code</th>
+                    <th>Meaning</th>
+                    <th>When to Use</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>202</code></td>
+                    <td>Accepted</td>
+                    <td>Initial async request accepted</td>
+                </tr>
+                <tr>
+                    <td><code>200</code></td>
+                    <td>OK</td>
+                    <td>Status check while in progress</td>
+                </tr>
+                <tr>
+                    <td><code>303</code></td>
+                    <td>See Other</td>
+                    <td>Operation complete, resource created</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="step-content">
+        <h2>Best Practices & Patterns</h2>
+        
+        <h3>Asynchronous Request-Reply Pattern</h3>
+        <div class="theory-box">
+            The Asynchronous Request-Reply pattern separates the request from the response, allowing the client to continue without blocking while waiting for the operation to complete.
+        </div>
+
+        <h3>Implementation Guidelines</h3>
+        <ul>
+            <li><strong>Provide Status Endpoint:</strong> Always include a Location header pointing to where status can be checked</li>
+            <li><strong>Set Reasonable Timeouts:</strong> Don't let async operations run indefinitely</li>
+            <li><strong>Support Cancellation:</strong> Allow clients to cancel long-running operations</li>
+            <li><strong>Include Progress Info:</strong> When possible, show percentage complete or estimated time</li>
+            <li><strong>Handle Failures Gracefully:</strong> Provide clear error messages in status responses</li>
+            <li><strong>Clean Up Resources:</strong> Remove completed status endpoints after a reasonable period</li>
+        </ul>
+
+        <h3>Full Workflow Example</h3>
+        <div class="code-block">1. Client Request:
+POST /api/reports
+→ Server: 202 Accepted, Location: /api/status/abc123
+
+2. Client Polls Status:
+GET /api/status/abc123
+→ Server: 200 OK, {"status": "In progress", "progress": 45}
+
+3. Client Checks Again:
+GET /api/status/abc123
+→ Server: 303 See Other, Location: /api/reports/789
+
+4. Client Retrieves Result:
+GET /api/reports/789
+→ Server: 200 OK, [report data]</div>
+
+        <div class="highlight-box">
+            <strong>Further Reading:</strong> See Microsoft's documentation on "Provide asynchronous support for long-running requests" and "Asynchronous Request-Reply pattern" for more details.
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>RESTful APIs Course • Lecture 4</p>
+    <p>Asynchronous Operations</p>
+</footer>
+
+<script>
+function showStep(index){document.querySelectorAll('.step-node').forEach((node,i)=>{i===index?node.classList.add('active'):node.classList.remove('active')});document.querySelectorAll('.step-content').forEach((content,i)=>{i===index?content.classList.add('active'):content.classList.remove('active')})}
+(function(){const savedTheme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',savedTheme)})();
+const themeToggle=document.getElementById('themeToggle');const sunIcon=document.querySelector('.sun-icon');const moonIcon=document.querySelector('.moon-icon');const html=document.documentElement;const currentTheme=localStorage.getItem('theme')||'dark';html.setAttribute('data-theme',currentTheme);if(currentTheme==='light'){sunIcon.style.display='none';moonIcon.style.display='block'}themeToggle.addEventListener('click',function(){const theme=html.getAttribute('data-theme');const newTheme=theme==='dark'?'light':'dark';html.setAttribute('data-theme',newTheme);localStorage.setItem('theme',newTheme);if(newTheme==='light'){sunIcon.style.display='none';moonIcon.style.display='block'}else{sunIcon.style.display='block';moonIcon.style.display='none'}});
+</script>
+</body>
+</html>

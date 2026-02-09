@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 01 - HTTP Request Methods</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+:root {
+    --primary-blue: #3b82f6;
+    --dark-bg: #020617;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --border-light: rgba(255, 255, 255, 0.12);
+    --text-main: #e5e7eb;
+    --text-dim: #94a3b8;
+    --accent-green: #4ed9c2;
+    --accent-cyan: #4ed9c2;
+}
+
+[data-theme="light"] {
+    --primary-blue: #3b82f6;
+    --dark-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border-light: rgba(15, 23, 42, 0.12);
+    --text-main: #0f172a;
+    --text-dim: #64748b;
+    --accent-green: #06b6d4;
+    --accent-cyan: #06b6d4;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark-bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.site-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid var(--primary-blue);
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+}
+
+.navbar,
+.top-bar {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    padding: 18px 5%;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+.top-bar h2 {
+    color: var(--text-main);
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.exit-link {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.exit-link:hover {
+    color: var(--text-main);
+}
+
+.theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+.hero {
+    text-align: center;
+    padding: 80px 20px 60px;
+}
+
+.hero .badge {
+    color: var(--accent-green);
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--text-main), var(--primary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    color: var(--text-dim);
+    font-size: 1.15rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Timeline Navigation */
+.timeline-nav {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    position: relative;
+    margin: 50px 0 70px;
+    padding: 0 5%;
+    flex-wrap: wrap;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 20px;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: var(--border-light);
+    z-index: 1;
+}
+
+.step-node {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    cursor: pointer;
+    min-width: 100px;
+}
+
+.dot {
+    width: 48px;
+    height: 48px;
+    background: var(--dark-bg);
+    border: 3px solid var(--border-light);
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--text-dim);
+    transition: all 0.35s ease;
+}
+
+.step-node.active .dot,
+.step-node:hover .dot {
+    background: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: white;
+    box-shadow: 0 0 24px rgba(59, 130, 246, 0.5);
+    transform: scale(1.12);
+}
+
+.node-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.step-node.active .node-label {
+    color: var(--text-main);
+}
+
+/* Content */
+.step-content {
+    display: none;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 25px 80px;
+    animation: fadeIn 0.5s ease;
+}
+
+.step-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    font-size: 2.4rem;
+    margin-bottom: 28px;
+    color: var(--text-main);
+    font-weight: 800;
+}
+
+.theory-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 36px;
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.highlight-box {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(168, 85, 247, 0.15));
+    border-left: 4px solid var(--primary-blue);
+    padding: 20px 24px;
+    margin: 28px 0;
+    border-radius: 8px;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.step-content p {
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    font-size: 1.05rem;
+    line-height: 1.75;
+}
+
+.step-content strong {
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0;
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+table th {
+    background: rgba(59, 130, 246, 0.15);
+    padding: 16px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--text-main);
+    border-bottom: 2px solid var(--border-light);
+}
+
+table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-dim);
+}
+
+table tr:last-child td {
+    border-bottom: none;
+}
+
+table tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+code {
+    background: rgba(59, 130, 246, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95em;
+    color: var(--accent-cyan);
+}
+
+.code-block {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 24px 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    overflow-x: auto;
+    color: var(--accent-cyan);
+}
+
+ul {
+    margin: 20px 0;
+    padding-left: 24px;
+}
+
+ul li {
+    margin: 12px 0;
+    color: var(--text-dim);
+    line-height: 1.7;
+}
+
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border-light);
+    margin-top: 60px;
+}
+
+footer p {
+    margin: 8px 0;
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .timeline-nav {
+        gap: 20px;
+    }
+    
+    .step-node {
+        min-width: 70px;
+    }
+    
+    .dot {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}
+    </style>
+</head>
+<body>
+<nav class="top-bar">
+        <a href="../../../../index.html" class="logo-link">
+            <img src="../../../../logo.jpeg" alt="Logo" class="site-logo">
+        </a>
+        <a href="../../../../index.html" style="text-decoration: none;">
+            <h2 style="color: white; margin: 0;">Digital Marketing</h2>
+        </a>
+        <a href="apis-lecture.html" class="exit-link">← Back to Syllabus</a>
+        <h2>HTTP Request Methods</h2>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg class="sun-icon" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+        <svg class="moon-icon" fill="currentColor" viewBox="0 0 24 24" style="display: none;">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+        </svg>
+    </button>
+</nav>
+
+<div class="hero">
+    <div class="badge">Lesson 01</div>
+    <h1>HTTP Request Methods</h1>
+    <p>Understanding RESTful web API methods and their alignment with HTTP protocol</p>
+</div>
+
+<div class="lesson-container">
+    <nav class="timeline-nav">
+        <div class="timeline-line"></div>
+        <div class="step-node active" onclick="showStep(0)"><div class="dot">1</div><div class="node-label">Overview</div></div>
+        <div class="step-node" onclick="showStep(1)"><div class="dot">2</div><div class="node-label">Conventions</div></div>
+        <div class="step-node" onclick="showStep(2)"><div class="dot">3</div><div class="node-label">GET</div></div>
+        <div class="step-node" onclick="showStep(3)"><div class="dot">4</div><div class="node-label">POST</div></div>
+        <div class="step-node" onclick="showStep(4)"><div class="dot">5</div><div class="node-label">PUT</div></div>
+        <div class="step-node" onclick="showStep(5)"><div class="dot">6</div><div class="node-label">PATCH</div></div>
+        <div class="step-node" onclick="showStep(6)"><div class="dot">7</div><div class="node-label">DELETE</div></div>
+    </nav>
+
+    <!-- Step 1: Overview -->
+    <div class="step-content active">
+        <h2>HTTP Request Methods Overview</h2>
+        <div class="theory-box">
+            RESTful web API methods align with the request methods and media types defined by the HTTP protocol. Understanding these methods is crucial for designing consistent and effective web APIs.
+        </div>
+        <div class="highlight-box">
+            <strong>Key Principle:</strong> The effect of a specific request method should depend on whether the resource is a collection or an individual item.
+        </div>
+        <p>The HTTP protocol defines many request methods that indicate the action you want to perform on a resource. The most common methods used in RESTful web APIs are:</p>
+        <ul>
+            <li><strong>GET</strong> - Retrieve resource data</li>
+            <li><strong>POST</strong> - Create new resources</li>
+            <li><strong>PUT</strong> - Update or replace existing resources</li>
+            <li><strong>PATCH</strong> - Partially update existing resources</li>
+            <li><strong>DELETE</strong> - Remove resources</li>
+        </ul>
+        <p>When you design a RESTful web API, use these methods in a way that is consistent with the protocol definition, the resource being accessed, and the action being performed.</p>
+    </div>
+
+    <!-- Step 2: Conventions Table -->
+    <div class="step-content">
+        <h2>RESTful Implementation Conventions</h2>
+        <p>The following table includes conventions that most RESTful implementations use. This example uses an e-commerce customer entity:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Resource</th>
+                    <th>POST</th>
+                    <th>GET</th>
+                    <th>PUT</th>
+                    <th>DELETE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>/customers</strong></td>
+                    <td>Create a new customer</td>
+                    <td>Retrieve all customers</td>
+                    <td>Bulk update of customers</td>
+                    <td>Remove all customers</td>
+                </tr>
+                <tr>
+                    <td><strong>/customers/1</strong></td>
+                    <td>Error</td>
+                    <td>Retrieve the details for customer 1</td>
+                    <td>Update the details of customer 1 if it exists</td>
+                    <td>Remove customer 1</td>
+                </tr>
+                <tr>
+                    <td><strong>/customers/1/orders</strong></td>
+                    <td>Create a new order for customer 1</td>
+                    <td>Retrieve all orders for customer 1</td>
+                    <td>Bulk update of orders for customer 1</td>
+                    <td>Remove all orders for customer 1</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="highlight-box">
+            <strong>Important:</strong> A web API doesn't need to implement all of the request methods. The methods it implements depend on the specific scenario.
+        </div>
+    </div>
+
+    <!-- Step 3: GET Requests -->
+    <div class="step-content">
+        <h2>GET Requests</h2>
+        <div class="theory-box">
+            A GET request retrieves a representation of the resource at the specified URI. The body of the response message contains the details of the requested resource.
+        </div>
+        <h3>HTTP Status Codes for GET</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>HTTP Status Code</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>200 (OK)</code></td>
+                    <td>The method has successfully returned the resource.</td>
+                </tr>
+                <tr>
+                    <td><code>204 (No Content)</code></td>
+                    <td>The response body doesn't contain any content, such as when a search request returns no matches.</td>
+                </tr>
+                <tr>
+                    <td><code>404 (Not Found)</code></td>
+                    <td>The requested resource can't be found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Step 4: POST Requests -->
+    <div class="step-content">
+        <h2>POST Requests</h2>
+        <div class="theory-box">
+            A POST request should create a resource. The server assigns a URI for the new resource and returns that URI to the client.
+        </div>
+        <div class="highlight-box">
+            <strong>Important:</strong> For POST requests, a client shouldn't attempt to create its own URI. The client should submit the request to the URI of the collection, and the server should assign a URI to the new resource.
+        </div>
+        <p>In a RESTful model, POST requests are used to add a new resource to the collection that the URI identifies. However, a POST request can also be used to submit data for processing to an existing resource, without the creation of any new resource.</p>
+        
+        <h3>HTTP Status Codes for POST</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>HTTP Status Code</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>200 (OK)</code></td>
+                    <td>The method has done some processing but doesn't create a new resource.</td>
+                </tr>
+                <tr>
+                    <td><code>201 (Created)</code></td>
+                    <td>The resource was created successfully. The URI of the new resource is included in the Location header.</td>
+                </tr>
+                <tr>
+                    <td><code>204 (No Content)</code></td>
+                    <td>The response body contains no content.</td>
+                </tr>
+                <tr>
+                    <td><code>400 (Bad Request)</code></td>
+                    <td>The client has placed invalid data in the request.</td>
+                </tr>
+                <tr>
+                    <td><code>405 (Method Not Allowed)</code></td>
+                    <td>The client has attempted to make a POST request to a URI that doesn't support POST requests.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Step 5: PUT Requests -->
+    <div class="step-content">
+        <h2>PUT Requests</h2>
+        <div class="theory-box">
+            A PUT request should update an existing resource if it exists or, in some cases, create a new resource if it doesn't exist.
+        </div>
+        
+        <h3>How PUT Works</h3>
+        <ul>
+            <li>The client specifies the URI for the resource and includes a request body that contains a <strong>complete representation</strong> of the resource</li>
+            <li>The client makes the request</li>
+            <li>If a resource with this URI already exists, it's replaced. Otherwise, a new resource is created (if the route supports it)</li>
+        </ul>
+
+        <div class="highlight-box">
+            <strong>Critical:</strong> PUT requests must be <strong>idempotent</strong>, which means that submitting the same request multiple times always results in the same resource being modified with the same values. In contrast, POST and PATCH requests aren't guaranteed to be idempotent.
+        </div>
+
+        <p>PUT methods are applied to resources that are individual items, such as a specific customer, instead of collections.</p>
+
+        <h3>HTTP Status Codes for PUT</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>HTTP Status Code</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>200 (OK)</code></td>
+                    <td>The resource was updated successfully.</td>
+                </tr>
+                <tr>
+                    <td><code>201 (Created)</code></td>
+                    <td>The resource was created successfully.</td>
+                </tr>
+                <tr>
+                    <td><code>204 (No Content)</code></td>
+                    <td>The resource was updated successfully, but the response body doesn't contain any content.</td>
+                </tr>
+                <tr>
+                    <td><code>409 (Conflict)</code></td>
+                    <td>The request couldn't be completed because of a conflict with the current state of the resource.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="highlight-box">
+            <strong>Tip:</strong> Consider implementing bulk HTTP PUT operations that can batch updates to multiple resources in a collection. This approach can help reduce chattiness and improve performance.
+        </div>
+    </div>
+
+    <!-- Step 6: PATCH Requests -->
+    <div class="step-content">
+        <h2>PATCH Requests</h2>
+        <div class="theory-box">
+            A PATCH request performs a <strong>partial update</strong> to an existing resource. The client specifies the URI for the resource and the request body specifies a set of changes to apply.
+        </div>
+
+        <p>This method can be more efficient than using PUT requests because the client only sends the changes and not the entire representation of the resource.</p>
+
+        <h3>JSON Merge Patch Example</h3>
+        <p>Suppose the original resource has the following JSON representation:</p>
+        <div class="code-block">{
+    "name": "gizmo",
+    "category": "widgets",
+    "color": "blue",
+    "price": 10
+}</div>
+
+        <p>Here's a possible JSON merge patch for this resource:</p>
+        <div class="code-block">{
+    "price": 12,
+    "color": null,
+    "size": "small"
+}</div>
+
+        <p>This merge patch tells the server to:</p>
+        <ul>
+            <li>Update <code>price</code> to 12</li>
+            <li>Delete <code>color</code> (null value)</li>
+            <li>Add <code>size</code> with value "small"</li>
+            <li>Keep <code>name</code> and <code>category</code> unchanged</li>
+        </ul>
+
+        <h3>HTTP Status Codes for PATCH</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>HTTP Status Code</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>200 (OK)</code></td>
+                    <td>The resource was updated successfully.</td>
+                </tr>
+                <tr>
+                    <td><code>400 (Bad Request)</code></td>
+                    <td>Malformed patch document.</td>
+                </tr>
+                <tr>
+                    <td><code>409 (Conflict)</code></td>
+                    <td>The patch document is valid, but the changes can't be applied to the resource in its current state.</td>
+                </tr>
+                <tr>
+                    <td><code>415 (Unsupported Media Type)</code></td>
+                    <td>The patch document format isn't supported.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="highlight-box">
+            <strong>Media Types:</strong> JSON merge patch uses <code>application/merge-patch+json</code> and JSON patch uses <code>application/json-patch+json</code>
+        </div>
+    </div>
+
+    <!-- Step 7: DELETE Requests -->
+    <div class="step-content">
+        <h2>DELETE Requests</h2>
+        <div class="theory-box">
+            A DELETE request removes the resource at the specified URI. It's a straightforward operation that permanently deletes the targeted resource.
+        </div>
+
+        <h3>HTTP Status Codes for DELETE</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>HTTP Status Code</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>204 (NO CONTENT)</code></td>
+                    <td>The resource was deleted successfully. The process has been successfully handled and the response body contains no further information.</td>
+                </tr>
+                <tr>
+                    <td><code>404 (NOT FOUND)</code></td>
+                    <td>The resource doesn't exist.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="highlight-box">
+            <strong>Best Practice:</strong> Always verify resource existence before attempting deletion and return appropriate status codes to inform the client of the operation result.
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>RESTful APIs Course • Lecture 4</p>
+    <p>HTTP Request Methods</p>
+</footer>
+
+<script>
+    function showStep(index) {
+        document.querySelectorAll('.step-node').forEach((node, i) => {
+            if (i === index) {
+                node.classList.add('active');
+            } else {
+                node.classList.remove('active');
+            }
+        });
+
+        document.querySelectorAll('.step-content').forEach((content, i) => {
+            if (i === index) {
+                content.classList.add('active');
+            } else {
+                content.classList.remove('active');
+            }
+        });
+    }
+</script>
+<script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+</script>
+
+<script>
+    const themeToggle = document.getElementById('themeToggle');
+    const sunIcon = document.querySelector('.sun-icon');
+    const moonIcon = document.querySelector('.moon-icon');
+    const html = document.documentElement;
+
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', currentTheme);
+    
+    if (currentTheme === 'light') {
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'block';
+    }
+
+    themeToggle.addEventListener('click', function() {
+      const theme = html.getAttribute('data-theme');
+      const newTheme = theme === 'dark' ? 'light' : 'dark';
+      
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      if (newTheme === 'light') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      }
+    });
+</script>
+  
+</body>
+</html>

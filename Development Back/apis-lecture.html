@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESTful APIs - Learning Path</title>
+    <style>
+/* --- CSS VARIABLES --- */
+:root {
+    --bg-primary: #050a18;
+    --bg-card: #0b1122;
+    --bg-card-hover: #0e162d;
+    --text-main: #ffffff;
+    --text-muted: #94a3b8;
+    --text-subtitle: #8fa0bc;
+    --border-color: #1e293b;
+    --accent-cyan: #4ed9c2;
+    --accent-blue: #3b82f6;
+    --accent-purple: #a855f7;
+    --accent-green: #10b981;
+    --color-title-blue: #92a9ff;
+    
+    /* Theme variables */
+    --bg: #071426;
+    --surface: #0b1f3a;
+    --text: #eaf2ff;
+    --muted: #b7c6dd;
+    --border: rgba(234, 242, 255, 0.12);
+    --primary: #3b82f6;
+    --primary-2: #06b6d4;
+}
+
+[data-theme="light"] {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: rgba(15, 23, 42, 0.12);
+    --primary: #3b82f6;
+    --primary-2: #06b6d4;
+    
+    /* Light mode specific */
+    --bg-primary: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-subtitle: #475569;
+    --border-color: rgba(15, 23, 42, 0.12);
+    --color-title-blue: #3b82f6;
+}
+
+/* --- CSS STYLES --- */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    max-width: 900px;
+    width: 100%;
+}
+
+.exit-link {
+    color: var(--text-main);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 40px;
+    transition: opacity 0.3s ease;
+}
+
+.exit-link:hover {
+    opacity: 0.7;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.syllabus-label {
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 3.5rem;
+    margin: 0;
+    color: var(--color-title-blue);
+    font-weight: 800;
+}
+
+.subtitle {
+    color: var(--text-subtitle);
+    margin-top: 10px;
+    font-size: 1.1rem;
+}
+
+/* The Timeline Logic */
+.timeline-wrapper {
+    position: relative;
+    padding-left: 50px;
+    margin-top: 40px;
+}
+
+.timeline-wrapper::before {
+    content: "";
+    position: absolute;
+    left: 14px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple), var(--accent-green));
+}
+
+.lesson-item {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.indicator {
+    position: absolute;
+    left: -53px;
+    top: 25px;
+    width: 18px;
+    height: 18px;
+    background-color: var(--bg-primary);
+    border: 3px solid;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.blue-glow { 
+    border-color: var(--accent-blue); 
+    box-shadow: 0 0 12px var(--accent-blue); 
+}
+
+.purple-glow { 
+    border-color: var(--accent-purple); 
+    box-shadow: 0 0 12px var(--accent-purple); 
+}
+
+.green-glow { 
+    border-color: var(--accent-green); 
+    box-shadow: 0 0 12px var(--accent-green); 
+}
+
+/* Syllabus Cards */
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 25px 35px;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    border-color: var(--accent-blue);
+    background-color: var(--bg-card-hover);
+}
+
+.content-area {
+    max-width: 80%;
+}
+
+.card h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.html-title { color: var(--accent-blue); }
+.css-title { color: var(--accent-purple); }
+.standard-title { color: var(--accent-green); }
+
+.card p {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* View Topic Button */
+.view-topic {
+    color: var(--accent-cyan);
+    font-weight: bold;
+    font-size: 0.85rem;
+    border: 1px solid var(--accent-cyan);
+    padding: 8px 15px;
+    border-radius: 5px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.view-topic:hover {
+    background-color: var(--accent-cyan);
+    color: var(--bg-primary);
+}
+
+/* Top Bar Navigation */
+.top-bar {
+    background: var(--surface);
+    backdrop-filter: blur(12px);
+    padding: 10px 5%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid var(--border);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: background 0.3s ease;
+}
+
+.top-bar h2 {
+    color: var(--text) !important;
+    margin: 0;
+}
+
+.site-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid var(--accent-blue);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+.site-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid var(--accent-blue);
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    .card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .content-area {
+        max-width: 100%;
+    }
+    
+    .view-topic {
+        align-self: flex-end;
+    }
+    
+    .theme-toggle span {
+        display: none;
+    }
+}
+    </style>
+</head>
+<body>
+    <nav class="top-bar">
+        <a href="../../../../index.html" class="logo-link">
+            <img src="../../../../logo.jpeg" alt="Logo" class="site-logo">
+        </a>
+        <a href="../../../../index.html" style="text-decoration: none;">
+            <h2 style="color: white; margin: 0;">Digital Marketing</h2>
+        </a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="sun-icon" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            <svg class="moon-icon" fill="currentColor" viewBox="0 0 24 24" style="display: none;">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+            </svg>
+          </button>
+    
+    </nav>
+
+    <div class="container">
+        <a href="#" class="exit-link">← BACK TO COURSE</a>
+
+        <header>
+            <div class="syllabus-label">Lecture 4</div>
+            <h1>RESTful Web APIs</h1>
+            <p class="subtitle">Comprehensive guide to designing and implementing RESTful APIs</p>
+        </header>
+
+        <div class="timeline-wrapper">
+
+            <div class="lesson-item">
+                <div class="indicator blue-glow"></div>
+                <div class="card">
+                    <div class="content-area">
+                        <h3 class="html-title">HTTP Request Methods</h3>
+                        <p>Understanding GET, POST, PUT, PATCH, and DELETE methods with practical examples and conventions.</p>
+                    </div>
+                    <a href="lesson1.html" class="view-topic">VIEW LESSON</a>
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="indicator blue-glow"></div>
+                <div class="card">
+                    <div class="content-area">
+                        <h3 class="html-title">Resource MIME Types & Media</h3>
+                        <p>Working with Content-Type, Accept headers, and resource representation formats in HTTP protocol.</p>
+                    </div>
+                    <a href="lesson2.html" class="view-topic">VIEW LESSON</a>
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="indicator purple-glow"></div>
+                <div class="card">
+                    <div class="content-area">
+                        <h3 class="css-title">Asynchronous Operations</h3>
+                        <p>Implementing async methods, status endpoints, and handling long-running requests efficiently.</p>
+                    </div>
+                    <a href="lesson3.html" class="view-topic">VIEW LESSON</a>
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="indicator purple-glow"></div>
+                <div class="card">
+                    <div class="content-area">
+                        <h3 class="css-title">Pagination & Filtering</h3>
+                        <p>Data pagination techniques, query-based filtering, sorting, and field selection strategies.</p>
+                    </div>
+                    <a href="lesson4.html" class="view-topic">VIEW LESSON</a>
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="indicator purple-glow"></div>
+                <div class="card">
+                    <div class="content-area">
+                        <h3 class="css-title">Partial Responses & Large Resources</h3>
+                        <p>Supporting partial responses, Accept-Ranges header, and efficient handling of large binary files.</p>
+                    </div>
+                    <a href="lesson5.html" class="view-topic">VIEW LESSON</a>
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="indicator green-glow"></div>
+                <div class="card">
+                    <div class="content-area">
+                        <h3 class="standard-title">HATEOAS Implementation</h3>
+                        <p>Hypertext as the Engine of Application State - navigating resources through hypermedia links.</p>
+                    </div>
+                    <a href="lesson6.html" class="view-topic">VIEW LESSON</a>
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="indicator green-glow"></div>
+                <div class="card">
+                    <div class="content-area">
+                        <h3 class="standard-title">API Versioning Strategies</h3>
+                        <p>URI, query string, header, and media type versioning approaches with trade-offs analysis.</p>
+                    </div>
+                    <a href="lesson7.html" class="view-topic">VIEW LESSON</a>
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="indicator green-glow"></div>
+                <div class="card">
+                    <div class="content-area">
+                        <h3 class="standard-title">Multitenancy & Advanced Topics</h3>
+                        <p>Multitenant API design, distributed tracing, maturity models, and OpenAPI specification.</p>
+                    </div>
+                    <a href="lesson8.html" class="view-topic">VIEW LESSON</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        // Apply theme IMMEDIATELY to prevent flash
+        (function() {
+          const savedTheme = localStorage.getItem('theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+      </script>
+      
+      
+      <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        const html = document.documentElement;
+      
+        // Check for saved theme preference or default to 'dark'
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', currentTheme);
+        
+        // Update icon visibility based on current theme
+        if (currentTheme === 'light') {
+          sunIcon.style.display = 'none';
+          moonIcon.style.display = 'block';
+        }
+      
+        // Theme toggle click handler
+        themeToggle.addEventListener('click', function() {
+          const theme = html.getAttribute('data-theme');
+          const newTheme = theme === 'dark' ? 'light' : 'dark';
+          
+          html.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          
+          // Toggle icons
+          if (newTheme === 'light') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+          } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+          }
+        });
+      </script>
+      
+</body>
+</html>
