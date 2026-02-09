@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3 - Datasets & Data Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+
+:root {
+    --primary-blue: #3b82f6;
+    --dark-bg: #020617;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --border-light: rgba(255, 255, 255, 0.12);
+    --text-main: #e5e7eb;
+    --text-dim: #94a3b8;
+    --accent-green: #4ed9c2;
+    --accent-cyan: #4ed9c2;
+}
+
+[data-theme="light"] {
+    --primary-blue: #3b82f6;
+    --dark-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border-light: rgba(15, 23, 42, 0.12);
+    --text-main: #0f172a;
+    --text-dim: #64748b;
+    --accent-green: #06b6d4;
+    --accent-cyan: #06b6d4;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark-bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar,
+.top-bar {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    padding: 18px 5%;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+.top-bar h2 {
+    color: var(--text-main);
+    margin: 0;
+    font-size: 1.5rem; /* Adjust this value - smaller number = smaller text */
+}
+
+.top-bar a {
+    gap: 10px; /* Adjust this number to your preference */
+}
+
+.site-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid var(--primary-blue);
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+}
+
+.exit-link {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.exit-link:hover {
+    color: var(--text-main);
+}
+
+.theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+.hero {
+    text-align: center;
+    padding: 80px 20px 60px;
+}
+
+.hero .badge {
+    color: var(--accent-green);
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--text-main), var(--primary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    color: var(--text-dim);
+    font-size: 1.15rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Timeline Navigation */
+.timeline-nav {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    position: relative;
+    margin: 50px 0 70px;
+    padding: 0 5%;
+    flex-wrap: wrap;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 20px;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: var(--border-light);
+    z-index: 1;
+}
+
+.step-node {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    cursor: pointer;
+    min-width: 100px;
+}
+
+.dot {
+    width: 48px;
+    height: 48px;
+    background: var(--dark-bg);
+    border: 3px solid var(--border-light);
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--text-dim);
+    transition: all 0.35s ease;
+}
+
+.step-node.active .dot,
+.step-node:hover .dot {
+    background: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: white;
+    box-shadow: 0 0 24px rgba(59, 130, 246, 0.5);
+    transform: scale(1.12);
+}
+
+.node-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.step-node.active .node-label {
+    color: var(--text-main);
+}
+
+/* Content */
+.step-content {
+    display: none;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 25px 80px;
+    animation: fadeIn 0.5s ease;
+}
+
+.step-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    font-size: 2.4rem;
+    margin-bottom: 28px;
+    color: var(--text-main);
+    font-weight: 800;
+}
+
+.theory-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 36px;
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.theory-box strong {
+    color: var(--text-main);
+}
+
+.highlight-box {
+    background: rgba(59, 130, 246, 0.12);
+    border-left: 5px solid var(--primary-blue);
+    padding: 22px;
+    margin: 28px 0;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    color: var(--text-main);
+}
+
+.section-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 28px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.details-list {
+    padding-left: 24px;
+    color: var(--text-dim);
+}
+
+.details-list li {
+    margin-bottom: 8px;
+}
+
+.step-content p {
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    font-size: 1.05rem;
+}
+
+.step-content strong {
+    color: var(--text-main);
+}
+
+.step-content ul {
+    color: var(--text-dim);
+    padding-left: 24px;
+}
+
+.step-content ul li {
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+}
+
+th, td {
+    border: 1px solid var(--border-light);
+    padding: 16px;
+    text-align: left;
+    color: var(--text-dim);
+}
+
+th {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+td strong {
+    color: var(--text-main);
+}
+
+code {
+    font-family: 'Fira Code', monospace;
+    background: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent-cyan);
+}
+
+footer {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border-light);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .timeline-nav {
+        gap: 20px;
+    }
+    
+    .step-node {
+        min-width: 80px;
+    }
+    
+    .dot {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+    
+    .node-label {
+        font-size: 0.7rem;
+    }
+    
+    .section-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+    
+    .theme-toggle span {
+        display: none;
+    }
+}
+    
+    </style>
+</head>
+<body>
+
+    <nav class="top-bar">
+        <a href="../../../../index.html" class="logo-link">
+            <img src="../../../../logo.jpeg" alt="Logo" class="site-logo">
+        </a>
+        <a href="../../../../index.html" style="text-decoration: none; display: flex; align-items: center; gap: 15px;">
+            <h2 style="color: white; margin: 0;">Digital Marketing</h2>
+        </a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="sun-icon" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            <svg class="moon-icon" fill="currentColor" viewBox="0 0 24 24" style="display: none;">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+            </svg>
+        </button>
+    </nav>
+
+    <header class="hero">
+        <a href="PWy1s2.html" class="exit-link">← BACK TO SYLLABUS</a>
+        <div class="badge">Week 3</div>
+        <h1>Datasets & Data Management</h1>
+        <p>Master data fundamentals for web development</p>
+    </header>
+
+    <nav class="timeline-nav">
+        <div class="timeline-line"></div>
+        <div class="step-node active" onclick="showStep(0)"><div class="dot">1</div><div class="node-label">Introduction</div></div>
+        <div class="step-node" onclick="showStep(1)"><div class="dot">2</div><div class="node-label">Data Types</div></div>
+        <div class="step-node" onclick="showStep(2)"><div class="dot">3</div><div class="node-label">Databases</div></div>
+        <div class="step-node" onclick="showStep(3)"><div class="dot">4</div><div class="node-label">Data Storage</div></div>
+        <div class="step-node" onclick="showStep(4)"><div class="dot">5</div><div class="node-label">Best Practices</div></div>
+        <div class="step-node" onclick="showStep(5)"><div class="dot">6</div><div class="node-label">Security</div></div>
+    </nav>
+
+    <div class="step-content active">
+        <h2>📁 Introduction to Data Management</h2>
+        <div class="theory-box">
+            Effective data management is crucial for websites that collect, store, and process user information.
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Concept</th>
+                    <th>Description</th>
+                    <th>Importance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Dataset</strong></td>
+                    <td>Collection of related data points</td>
+                    <td>Foundation of all data operations</td>
+                </tr>
+                <tr>
+                    <td><strong>Database</strong></td>
+                    <td>Organized collection of structured data</td>
+                    <td>Enables efficient data storage & retrieval</td>
+                </tr>
+                <tr>
+                    <td><strong>Data Management</strong></td>
+                    <td>Process of collecting, storing, and using data</td>
+                    <td>Ensures data quality and accessibility</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="step-content">
+        <h2>🔢 Types of Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data Type</th>
+                    <th>Description</th>
+                    <th>Examples</th>
+                    <th>Use Cases</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Structured Data</strong></td>
+                    <td>Organized in rows and columns</td>
+                    <td>Spreadsheets, SQL databases</td>
+                    <td>Customer records, inventory</td>
+                </tr>
+                <tr>
+                    <td><strong>Unstructured Data</strong></td>
+                    <td>No predefined format</td>
+                    <td>Images, videos, text documents</td>
+                    <td>Media files, social media posts</td>
+                </tr>
+                <tr>
+                    <td><strong>Semi-Structured Data</strong></td>
+                    <td>Some organizational properties</td>
+                    <td>JSON, XML, emails</td>
+                    <td>API responses, configuration files</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="step-content">
+        <h2>🗄️ Database Types</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Database Type</th>
+                    <th>Structure</th>
+                    <th>Best For</th>
+                    <th>Examples</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Relational (SQL)</strong></td>
+                    <td>Tables with relationships</td>
+                    <td>Complex queries, transactions</td>
+                    <td>MySQL, PostgreSQL, SQL Server</td>
+                </tr>
+                <tr>
+                    <td><strong>NoSQL</strong></td>
+                    <td>Flexible, non-tabular</td>
+                    <td>Scalability, flexible schemas</td>
+                    <td>MongoDB, Cassandra, Redis</td>
+                </tr>
+                <tr>
+                    <td><strong>Graph Databases</strong></td>
+                    <td>Nodes and relationships</td>
+                    <td>Social networks, recommendations</td>
+                    <td>Neo4j, Amazon Neptune</td>
+                </tr>
+                <tr>
+                    <td><strong>Time-Series</strong></td>
+                    <td>Time-stamped data</td>
+                    <td>Analytics, monitoring, IoT</td>
+                    <td>InfluxDB, TimescaleDB</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="step-content">
+        <h2>💾 Data Storage Solutions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Storage Type</th>
+                    <th>Description</th>
+                    <th>Advantages</th>
+                    <th>Disadvantages</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Local Storage</strong></td>
+                    <td>Data stored on web server</td>
+                    <td>Full control, fast access</td>
+                    <td>Limited scalability, maintenance</td>
+                </tr>
+                <tr>
+                    <td><strong>Cloud Storage</strong></td>
+                    <td>Data stored on remote servers</td>
+                    <td>Scalable, accessible anywhere</td>
+                    <td>Ongoing costs, internet dependent</td>
+                </tr>
+                <tr>
+                    <td><strong>Hybrid Storage</strong></td>
+                    <td>Combination of local and cloud</td>
+                    <td>Flexibility, redundancy</td>
+                    <td>Complex setup, higher cost</td>
+                </tr>
+                <tr>
+                    <td><strong>CDN (Content Delivery)</strong></td>
+                    <td>Distributed network of servers</td>
+                    <td>Fast delivery, global reach</td>
+                    <td>Best for static content only</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="step-content">
+        <h2>✅ Data Management Best Practices</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Practice</th>
+                    <th>Description</th>
+                    <th>Benefits</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Regular Backups</strong></td>
+                    <td>Automated daily/weekly backups</td>
+                    <td>Disaster recovery, data protection</td>
+                </tr>
+                <tr>
+                    <td><strong>Data Validation</strong></td>
+                    <td>Verify data accuracy on entry</td>
+                    <td>Maintain data quality</td>
+                </tr>
+                <tr>
+                    <td><strong>Indexing</strong></td>
+                    <td>Create indexes on frequently queried fields</td>
+                    <td>Faster data retrieval</td>
+                </tr>
+                <tr>
+                    <td><strong>Normalization</strong></td>
+                    <td>Organize data to reduce redundancy</td>
+                    <td>Efficient storage, consistency</td>
+                </tr>
+                <tr>
+                    <td><strong>Documentation</strong></td>
+                    <td>Document database schema and processes</td>
+                    <td>Team understanding, maintenance</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="step-content">
+        <h2>🔒 Data Security & Privacy</h2>
+        <div class="theory-box">
+            Protecting user data is not just good practice—it's a legal requirement under regulations like GDPR and CCPA.
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Security Measure</th>
+                    <th>Implementation</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Encryption</strong></td>
+                    <td>SSL/TLS for transmission, AES for storage</td>
+                    <td>Protect data from unauthorized access</td>
+                </tr>
+                <tr>
+                    <td><strong>Access Control</strong></td>
+                    <td>Role-based permissions, authentication</td>
+                    <td>Limit who can view/modify data</td>
+                </tr>
+                <tr>
+                    <td><strong>SQL Injection Prevention</strong></td>
+                    <td>Prepared statements, input validation</td>
+                    <td>Prevent malicious database queries</td>
+                </tr>
+                <tr>
+                    <td><strong>Regular Audits</strong></td>
+                    <td>Log monitoring, security scans</td>
+                    <td>Detect and respond to threats</td>
+                </tr>
+                <tr>
+                    <td><strong>Data Privacy Compliance</strong></td>
+                    <td>GDPR, CCPA adherence</td>
+                    <td>Legal compliance, user trust</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="highlight-box">
+            <strong>Remember:</strong> Security is an ongoing process, not a one-time setup. Stay updated on best practices and threats.
+        </div>
+    </div>
+
+    <footer>
+        <p>Contact: sherrost@yahoo.com | Tel: 01501827070 - 01017776756</p>
+        <p>Produce a Website • Week 3 - Datasets & Data Management</p>
+    </footer>
+
+    <script>
+        function showStep(index) {
+            document.querySelectorAll('.step-node').forEach((node, i) => {
+                if (i === index) { node.classList.add('active'); } 
+                else { node.classList.remove('active'); }
+            });
+            document.querySelectorAll('.step-content').forEach((content, i) => {
+                if (i === index) { content.classList.add('active'); } 
+                else { content.classList.remove('active'); }
+            });
+        }
+    </script>
+    <script>
+        (function() {
+          const savedTheme = localStorage.getItem('theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        const html = document.documentElement;
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', currentTheme);
+        if (currentTheme === 'light') {
+          sunIcon.style.display = 'none';
+          moonIcon.style.display = 'block';
+        }
+        themeToggle.addEventListener('click', function() {
+          const theme = html.getAttribute('data-theme');
+          const newTheme = theme === 'dark' ? 'light' : 'dark';
+          html.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          if (newTheme === 'light') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+          } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+          }
+        });
+    </script>
+</body>
+</html>

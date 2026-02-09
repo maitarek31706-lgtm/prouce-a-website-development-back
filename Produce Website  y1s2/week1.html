@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1 - Website Planning & Goal Setting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+
+:root {
+    --primary-blue: #3b82f6;
+    --dark-bg: #020617;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --border-light: rgba(255, 255, 255, 0.12);
+    --text-main: #e5e7eb;
+    --text-dim: #94a3b8;
+    --accent-green: #4ed9c2;
+    --accent-cyan: #4ed9c2;
+}
+
+[data-theme="light"] {
+    --primary-blue: #3b82f6;
+    --dark-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border-light: rgba(15, 23, 42, 0.12);
+    --text-main: #0f172a;
+    --text-dim: #64748b;
+    --accent-green: #06b6d4;
+    --accent-cyan: #06b6d4;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark-bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar,
+.top-bar {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    padding: 18px 5%;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+.top-bar h2 {
+    color: var(--text-main);
+    margin: 0;
+    font-size: 1.5rem; /* Adjust this value - smaller number = smaller text */
+}
+
+.top-bar a {
+    gap: 10px; /* Adjust this number to your preference */
+}
+
+.site-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid var(--primary-blue);
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+}
+
+.exit-link {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.exit-link:hover {
+    color: var(--text-main);
+}
+
+.theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+.hero {
+    text-align: center;
+    padding: 80px 20px 60px;
+}
+
+.hero .badge {
+    color: var(--accent-green);
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--text-main), var(--primary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    color: var(--text-dim);
+    font-size: 1.15rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Timeline Navigation */
+.timeline-nav {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    position: relative;
+    margin: 50px 0 70px;
+    padding: 0 5%;
+    flex-wrap: wrap;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 20px;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: var(--border-light);
+    z-index: 1;
+}
+
+.step-node {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    cursor: pointer;
+    min-width: 100px;
+}
+
+.dot {
+    width: 48px;
+    height: 48px;
+    background: var(--dark-bg);
+    border: 3px solid var(--border-light);
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--text-dim);
+    transition: all 0.35s ease;
+}
+
+.step-node.active .dot,
+.step-node:hover .dot {
+    background: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: white;
+    box-shadow: 0 0 24px rgba(59, 130, 246, 0.5);
+    transform: scale(1.12);
+}
+
+.node-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.step-node.active .node-label {
+    color: var(--text-main);
+}
+
+/* Content */
+.step-content {
+    display: none;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 25px 80px;
+    animation: fadeIn 0.5s ease;
+}
+
+.step-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    font-size: 2.4rem;
+    margin-bottom: 28px;
+    color: var(--text-main);
+    font-weight: 800;
+}
+
+.theory-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 36px;
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.theory-box strong {
+    color: var(--text-main);
+}
+
+.highlight-box {
+    background: rgba(59, 130, 246, 0.12);
+    border-left: 5px solid var(--primary-blue);
+    padding: 22px;
+    margin: 28px 0;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    color: var(--text-main);
+}
+
+.section-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 28px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.details-list {
+    padding-left: 24px;
+    color: var(--text-dim);
+}
+
+.details-list li {
+    margin-bottom: 8px;
+}
+
+.step-content p {
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    font-size: 1.05rem;
+}
+
+.step-content strong {
+    color: var(--text-main);
+}
+
+.step-content ul {
+    color: var(--text-dim);
+    padding-left: 24px;
+}
+
+.step-content ul li {
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+}
+
+th, td {
+    border: 1px solid var(--border-light);
+    padding: 16px;
+    text-align: left;
+    color: var(--text-dim);
+}
+
+th {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+td strong {
+    color: var(--text-main);
+}
+
+code {
+    font-family: 'Fira Code', monospace;
+    background: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent-cyan);
+}
+
+footer {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border-light);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .timeline-nav {
+        gap: 20px;
+    }
+    
+    .step-node {
+        min-width: 80px;
+    }
+    
+    .dot {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+    
+    .node-label {
+        font-size: 0.7rem;
+    }
+    
+    .section-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+    
+    .theme-toggle span {
+        display: none;
+    }
+}
+    
+    </style>
+</head>
+<body>
+
+    <nav class="top-bar">
+        <a href="../../../../index.html" class="logo-link">
+            <img src="../../../../logo.jpeg" alt="Logo" class="site-logo">
+        </a>
+        <a href="../../../../index.html" style="text-decoration: none; display: flex; align-items: center; gap: 15px;">
+            <h2 style="color: white; margin: 0;">Digital Marketing</h2>
+        </a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="sun-icon" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            <svg class="moon-icon" fill="currentColor" viewBox="0 0 24 24" style="display: none;">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+            </svg>
+        </button>
+    </nav>
+
+    <header class="hero">
+        <a href="PWy1s2.html" class="exit-link">← BACK TO SYLLABUS</a>
+        <div class="badge">Week 1</div>
+        <h1>Website Planning & Goal Setting</h1>
+        <p>Define your website's purpose and understand your target audience</p>
+    </header>
+
+    <!-- Timeline Navigation -->
+    <nav class="timeline-nav">
+        <div class="timeline-line"></div>
+        <div class="step-node active" onclick="showStep(0)"><div class="dot">1</div><div class="node-label">Introduction</div></div>
+        <div class="step-node" onclick="showStep(1)"><div class="dot">2</div><div class="node-label">Define Goal</div></div>
+        <div class="step-node" onclick="showStep(2)"><div class="dot">3</div><div class="node-label">Business Goals</div></div>
+        <div class="step-node" onclick="showStep(3)"><div class="dot">4</div><div class="node-label">Target Audience</div></div>
+        <div class="step-node" onclick="showStep(4)"><div class="dot">5</div><div class="node-label">Audience Research</div></div>
+        <div class="step-node" onclick="showStep(5)"><div class="dot">6</div><div class="node-label">Key Takeaways</div></div>
+    </nav>
+
+    <!-- Step 1: Introduction -->
+    <div class="step-content active">
+        <h2>📋 Introduction</h2>
+        <div class="theory-box">
+            Creating a website involves several key stages that ensure a successful online presence.
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Stage</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Planning</strong></td>
+                    <td>Defining goals and strategy</td>
+                </tr>
+                <tr>
+                    <td><strong>Content Creation</strong></td>
+                    <td>Developing compelling content</td>
+                </tr>
+                <tr>
+                    <td><strong>Web Design & Development</strong></td>
+                    <td>Building visual and functional elements</td>
+                </tr>
+                <tr>
+                    <td><strong>Testing</strong></td>
+                    <td>Ensuring quality and performance</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="highlight-box">
+            <strong>Focus:</strong> This week concentrates on the crucial planning phase - the foundation of any successful website.
+        </div>
+    </div>
+
+    <!-- Step 2: Define Your Website Goal -->
+    <div class="step-content">
+        <h2>🎯 Define Your Website Goal</h2>
+        <p>Before building a website, you must clearly understand <strong>why you need one</strong>.</p>
+        <div class="theory-box">
+            Your website goal determines the design, features, and content strategy you'll implement.
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Website Type</th>
+                    <th>Primary Goal</th>
+                    <th>Key Features</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>E-commerce</strong></td>
+                    <td>Sell products online</td>
+                    <td>Shopping cart, payment gateway, product catalog</td>
+                </tr>
+                <tr>
+                    <td><strong>Portfolio</strong></td>
+                    <td>Showcase work/skills</td>
+                    <td>Gallery, case studies, resume</td>
+                </tr>
+                <tr>
+                    <td><strong>Blog</strong></td>
+                    <td>Share information/ideas</td>
+                    <td>Article listings, comments, RSS feed</td>
+                </tr>
+                <tr>
+                    <td><strong>Business/Corporate</strong></td>
+                    <td>Build credibility & generate leads</td>
+                    <td>About us, services, contact form</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Step 3: Business Goals -->
+    <div class="step-content">
+        <h2>🏢 What Are Your Business Goals?</h2>
+        <p>Your business goals directly influence your website's purpose and design.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Business Goal</th>
+                    <th>Website Strategy</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Increase Sales</strong></td>
+                    <td>E-commerce platform with conversion optimization</td>
+                </tr>
+                <tr>
+                    <td><strong>Generate Leads</strong></td>
+                    <td>Lead capture forms, call-to-actions, landing pages</td>
+                </tr>
+                <tr>
+                    <td><strong>Build Brand Awareness</strong></td>
+                    <td>Content marketing, social proof, storytelling</td>
+                </tr>
+                <tr>
+                    <td><strong>Provide Customer Support</strong></td>
+                    <td>Knowledge base, FAQs, chatbot, ticketing system</td>
+                </tr>
+                <tr>
+                    <td><strong>Educate Audience</strong></td>
+                    <td>Blog, tutorials, resources library, webinars</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="highlight-box">
+            <strong>Remember:</strong> Your website should align with your overall business strategy and objectives.
+        </div>
+    </div>
+
+    <!-- Step 4: Target Audience -->
+    <div class="step-content">
+        <h2>👥 Who Is Your Target Audience?</h2>
+        <div class="theory-box">
+            Understanding your target audience is critical for creating a website that resonates and converts.
+        </div>
+        <p><strong>Key Questions to Answer:</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Questions to Consider</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Demographics</strong></td>
+                    <td>Age, gender, location, income level, education</td>
+                </tr>
+                <tr>
+                    <td><strong>Psychographics</strong></td>
+                    <td>Interests, values, lifestyle, personality traits</td>
+                </tr>
+                <tr>
+                    <td><strong>Behavior</strong></td>
+                    <td>Online habits, device usage, preferred platforms</td>
+                </tr>
+                <tr>
+                    <td><strong>Pain Points</strong></td>
+                    <td>Challenges they face, problems they need solved</td>
+                </tr>
+                <tr>
+                    <td><strong>Goals</strong></td>
+                    <td>What they want to achieve, their aspirations</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Step 5: Audience Research Details -->
+    <div class="step-content">
+        <h2>📊 Audience Research Methods</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Research Method</th>
+                    <th>Description</th>
+                    <th>Benefits</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Surveys & Questionnaires</strong></td>
+                    <td>Collect direct feedback from potential users</td>
+                    <td>Quantifiable data, specific insights</td>
+                </tr>
+                <tr>
+                    <td><strong>Analytics Review</strong></td>
+                    <td>Analyze existing website/social media data</td>
+                    <td>Real behavior patterns, conversion data</td>
+                </tr>
+                <tr>
+                    <td><strong>Competitor Analysis</strong></td>
+                    <td>Study similar websites in your industry</td>
+                    <td>Best practices, gap identification</td>
+                </tr>
+                <tr>
+                    <td><strong>User Interviews</strong></td>
+                    <td>One-on-one conversations with target users</td>
+                    <td>Deep qualitative insights, pain points</td>
+                </tr>
+                <tr>
+                    <td><strong>Social Listening</strong></td>
+                    <td>Monitor social media conversations</td>
+                    <td>Trending topics, common questions</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="highlight-box">
+            <strong>Pro Tip:</strong> Use multiple research methods for a comprehensive understanding of your audience.
+        </div>
+    </div>
+
+    <!-- Step 6: Key Takeaways -->
+    <div class="step-content">
+        <h2>✅ Key Takeaways</h2>
+        <div class="theory-box">
+            Proper planning is the foundation of a successful website. Always start with clear goals and deep audience understanding.
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key Point</th>
+                    <th>Action Item</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Define Clear Goals</strong></td>
+                    <td>Write down your primary website objective</td>
+                </tr>
+                <tr>
+                    <td><strong>Know Your Audience</strong></td>
+                    <td>Create detailed audience personas</td>
+                </tr>
+                <tr>
+                    <td><strong>Align with Business</strong></td>
+                    <td>Ensure website supports business goals</td>
+                </tr>
+                <tr>
+                    <td><strong>Research Thoroughly</strong></td>
+                    <td>Use multiple methods to understand users</td>
+                </tr>
+                <tr>
+                    <td><strong>Plan Before Building</strong></td>
+                    <td>Document strategy before design/development</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>Contact: sherrost@yahoo.com | Tel: 01501827070 - 01017776756</p>
+        <p>Produce a Website • Week 1 - Website Planning & Goal Setting</p>
+    </footer>
+
+    <script>
+        function showStep(index) {
+            document.querySelectorAll('.step-node').forEach((node, i) => {
+                if (i === index) {
+                    node.classList.add('active');
+                } else {
+                    node.classList.remove('active');
+                }
+            });
+
+            document.querySelectorAll('.step-content').forEach((content, i) => {
+                if (i === index) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
+    </script>
+    <script>
+        (function() {
+          const savedTheme = localStorage.getItem('theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        const html = document.documentElement;
+      
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', currentTheme);
+        
+        if (currentTheme === 'light') {
+          sunIcon.style.display = 'none';
+          moonIcon.style.display = 'block';
+        }
+      
+        themeToggle.addEventListener('click', function() {
+          const theme = html.getAttribute('data-theme');
+          const newTheme = theme === 'dark' ? 'light' : 'dark';
+          
+          html.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          
+          if (newTheme === 'light') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+          } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+          }
+        });
+    </script>
+      
+</body>
+</html>

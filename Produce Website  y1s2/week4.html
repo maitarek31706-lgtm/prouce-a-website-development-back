@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 4 - Essential Website Pages</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+
+:root {
+    --primary-blue: #3b82f6;
+    --dark-bg: #020617;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --border-light: rgba(255, 255, 255, 0.12);
+    --text-main: #e5e7eb;
+    --text-dim: #94a3b8;
+    --accent-green: #4ed9c2;
+    --accent-cyan: #4ed9c2;
+}
+
+[data-theme="light"] {
+    --primary-blue: #3b82f6;
+    --dark-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border-light: rgba(15, 23, 42, 0.12);
+    --text-main: #0f172a;
+    --text-dim: #64748b;
+    --accent-green: #06b6d4;
+    --accent-cyan: #06b6d4;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark-bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar,
+.top-bar {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    padding: 18px 5%;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+.top-bar h2 {
+    color: var(--text-main);
+    margin: 0;
+    font-size: 1.5rem; /* Adjust this value - smaller number = smaller text */
+}
+
+.top-bar a {
+    gap: 10px; /* Adjust this number to your preference */
+}
+
+.site-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid var(--primary-blue);
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+}
+
+.exit-link {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.exit-link:hover {
+    color: var(--text-main);
+}
+
+.theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+.hero {
+    text-align: center;
+    padding: 80px 20px 60px;
+}
+
+.hero .badge {
+    color: var(--accent-green);
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--text-main), var(--primary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    color: var(--text-dim);
+    font-size: 1.15rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Timeline Navigation */
+.timeline-nav {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    position: relative;
+    margin: 50px 0 70px;
+    padding: 0 5%;
+    flex-wrap: wrap;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 20px;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: var(--border-light);
+    z-index: 1;
+}
+
+.step-node {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    cursor: pointer;
+    min-width: 100px;
+}
+
+.dot {
+    width: 48px;
+    height: 48px;
+    background: var(--dark-bg);
+    border: 3px solid var(--border-light);
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--text-dim);
+    transition: all 0.35s ease;
+}
+
+.step-node.active .dot,
+.step-node:hover .dot {
+    background: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: white;
+    box-shadow: 0 0 24px rgba(59, 130, 246, 0.5);
+    transform: scale(1.12);
+}
+
+.node-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.step-node.active .node-label {
+    color: var(--text-main);
+}
+
+/* Content */
+.step-content {
+    display: none;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 25px 80px;
+    animation: fadeIn 0.5s ease;
+}
+
+.step-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    font-size: 2.4rem;
+    margin-bottom: 28px;
+    color: var(--text-main);
+    font-weight: 800;
+}
+
+.theory-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 36px;
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.theory-box strong {
+    color: var(--text-main);
+}
+
+.highlight-box {
+    background: rgba(59, 130, 246, 0.12);
+    border-left: 5px solid var(--primary-blue);
+    padding: 22px;
+    margin: 28px 0;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    color: var(--text-main);
+}
+
+.section-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 28px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.details-list {
+    padding-left: 24px;
+    color: var(--text-dim);
+}
+
+.details-list li {
+    margin-bottom: 8px;
+}
+
+.step-content p {
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    font-size: 1.05rem;
+}
+
+.step-content strong {
+    color: var(--text-main);
+}
+
+.step-content ul {
+    color: var(--text-dim);
+    padding-left: 24px;
+}
+
+.step-content ul li {
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+}
+
+th, td {
+    border: 1px solid var(--border-light);
+    padding: 16px;
+    text-align: left;
+    color: var(--text-dim);
+}
+
+th {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+td strong {
+    color: var(--text-main);
+}
+
+code {
+    font-family: 'Fira Code', monospace;
+    background: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent-cyan);
+}
+
+footer {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border-light);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .timeline-nav {
+        gap: 20px;
+    }
+    
+    .step-node {
+        min-width: 80px;
+    }
+    
+    .dot {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+    
+    .node-label {
+        font-size: 0.7rem;
+    }
+    
+    .section-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+    
+    .theme-toggle span {
+        display: none;
+    }
+}
+    
+    </style>
+</head>
+<body>
+
+    <nav class="top-bar">
+        <a href="../../../../index.html" class="logo-link">
+            <img src="../../../../logo.jpeg" alt="Logo" class="site-logo">
+        </a>
+        <a href="../../../../index.html" style="text-decoration: none; display: flex; align-items: center; gap: 15px;">
+            <h2 style="color: white; margin: 0;">Digital Marketing</h2>
+        </a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="sun-icon" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            <svg class="moon-icon" fill="currentColor" viewBox="0 0 24 24" style="display: none;">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+            </svg>
+        </button>
+    </nav>
+
+    <header class="hero">
+        <a href="PWy1s2.html" class="exit-link">← BACK TO SYLLABUS</a>
+        <div class="badge">Week 4</div>
+        <h1>Essential Website Pages</h1>
+        <p>Create conversion-optimized website structure</p>
+    </header>
+
+    <nav class="timeline-nav">
+        <div class="timeline-line"></div>
+        <div class="step-node active" onclick="showStep(0)"><div class="dot">1</div><div class="node-label">Introduction</div></div>
+        <div class="step-node" onclick="showStep(1)"><div class="dot">2</div><div class="node-label">Homepage</div></div>
+        <div class="step-node" onclick="showStep(2)"><div class="dot">3</div><div class="node-label">About Page</div></div>
+        <div class="step-node" onclick="showStep(3)"><div class="dot">4</div><div class="node-label">Services/Products</div></div>
+        <div class="step-node" onclick="showStep(4)"><div class="dot">5</div><div class="node-label">Contact Page</div></div>
+        <div class="step-node" onclick="showStep(5)"><div class="dot">6</div><div class="node-label">Additional Pages</div></div>
+    </nav>
+
+    <div class="step-content active">
+        <h2>📄 Introduction to Essential Pages</h2>
+        <div class="theory-box">
+            Every professional website needs a core set of pages that provide information and guide visitors toward conversion.
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Page Type</th>
+                    <th>Purpose</th>
+                    <th>Priority</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Homepage</strong></td>
+                    <td>First impression, navigation hub</td>
+                    <td>Essential</td>
+                </tr>
+                <tr>
+                    <td><strong>About</strong></td>
+                    <td>Build trust and credibility</td>
+                    <td>Essential</td>
+                </tr>
+                <tr>
+                    <td><strong>Services/Products</strong></td>
+                    <td>Showcase offerings</td>
+                    <td>Essential</td>
+                </tr>
+                <tr>
+                    <td><strong>Contact</strong></td>
+                    <td>Enable communication</td>
+                    <td>Essential</td>
+                </tr>
+                <tr>
+                    <td><strong>Blog</strong></td>
+                    <td>Content marketing, SEO</td>
+                    <td>Important</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="step-content">
+        <h2>🏠 Homepage - Your Digital Storefront</h2>
+        <div class="theory-box">
+            The homepage is often the first page visitors see. It must immediately communicate who you are, what you offer, and why they should care.
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Element</th>
+                    <th>Purpose</th>
+                    <th>Best Practices</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Hero Section</strong></td>
+                    <td>Grab attention immediately</td>
+                    <td>Clear headline, compelling image, CTA button</td>
+                </tr>
+                <tr>
+                    <td><strong>Value Proposition</strong></td>
+                    <td>Explain what you offer</td>
+                    <td>Concise, benefit-focused, above the fold</td>
+                </tr>
+                <tr>
+                    <td><strong>Social Proof</strong></td>
+                    <td>Build credibility</td>
+                    <td>Testimonials, client logos, ratings</td>
+                </tr>
+                <tr>
+                    <td><strong>Features/Benefits</strong></td>
+                    <td>Highlight key offerings</td>
+                    <td>3-6 items, icons, brief descriptions</td>
+                </tr>
+                <tr>
+                    <td><strong>Call-to-Action</strong></td>
+                    <td>Guide next steps</td>
+                    <td>Prominent, action-oriented, repeated</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="step-content">
+        <h2>ℹ️ About Page - Build Trust & Connection</h2>
+        <div class="theory-box">
+            The About page is where you tell your story, showcase your team, and build an emotional connection with visitors.
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Section</th>
+                    <th>Content</th>
+                    <th>Goal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Company Story</strong></td>
+                    <td>Origin, mission, values</td>
+                    <td>Create emotional connection</td>
+                </tr>
+                <tr>
+                    <td><strong>Team Members</strong></td>
+                    <td>Photos, bios, roles</td>
+                    <td>Humanize your brand</td>
+                </tr>
+                <tr>
+                    <td><strong>Mission & Values</strong></td>
+                    <td>What you stand for</td>
+                    <td>Align with customer values</td>
+                </tr>
+                <tr>
+                    <td><strong>Achievements</strong></td>
+                    <td>Awards, milestones, stats</td>
+                    <td>Build credibility</td>
+                </tr>
+                <tr>
+                    <td><strong>Why Choose Us</strong></td>
+                    <td>Unique differentiators</td>
+                    <td>Stand out from competitors</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="highlight-box">
+            <strong>Tip:</strong> Make your About page personal and authentic. People connect with stories, not corporate jargon.
+        </div>
+    </div>
+
+    <div class="step-content">
+        <h2>🛍️ Services/Products Page</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Element</th>
+                    <th>Description</th>
+                    <th>Examples</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Product/Service Grid</strong></td>
+                    <td>Visual display of offerings</td>
+                    <td>Images, titles, brief descriptions</td>
+                </tr>
+                <tr>
+                    <td><strong>Detailed Descriptions</strong></td>
+                    <td>Features and benefits</td>
+                    <td>Specs, use cases, pricing</td>
+                </tr>
+                <tr>
+                    <td><strong>Pricing Information</strong></td>
+                    <td>Clear pricing structure</td>
+                    <td>Tiered plans, custom quotes</td>
+                </tr>
+                <tr>
+                    <td><strong>Categories/Filters</strong></td>
+                    <td>Easy navigation</td>
+                    <td>Sort by type, price, popularity</td>
+                </tr>
+                <tr>
+                    <td><strong>CTAs</strong></td>
+                    <td>Drive conversions</td>
+                    <td>"Buy Now", "Get Quote", "Learn More"</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="theory-box">
+            For e-commerce: Include shopping cart, product reviews, related items, and secure checkout process.
+        </div>
+    </div>
+
+    <div class="step-content">
+        <h2>📞 Contact Page - Make It Easy to Connect</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Purpose</th>
+                    <th>Best Practices</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Contact Form</strong></td>
+                    <td>Easy message submission</td>
+                    <td>Keep fields minimal, clear labels</td>
+                </tr>
+                <tr>
+                    <td><strong>Email Address</strong></td>
+                    <td>Direct email contact</td>
+                    <td>Use professional domain email</td>
+                </tr>
+                <tr>
+                    <td><strong>Phone Number</strong></td>
+                    <td>Immediate contact option</td>
+                    <td>Include business hours</td>
+                </tr>
+                <tr>
+                    <td><strong>Physical Address</strong></td>
+                    <td>Location transparency</td>
+                    <td>Embed Google Maps if applicable</td>
+                </tr>
+                <tr>
+                    <td><strong>Social Media Links</strong></td>
+                    <td>Alternative contact channels</td>
+                    <td>Icons linking to active profiles</td>
+                </tr>
+                <tr>
+                    <td><strong>Response Time</strong></td>
+                    <td>Set expectations</td>
+                    <td>"We respond within 24 hours"</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="highlight-box">
+            <strong>Important:</strong> Test your contact form regularly to ensure messages are being received!
+        </div>
+    </div>
+
+    <div class="step-content">
+        <h2>➕ Additional Important Pages</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Page</th>
+                    <th>Purpose</th>
+                    <th>When to Include</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Blog</strong></td>
+                    <td>Content marketing, SEO, thought leadership</td>
+                    <td>All businesses (highly recommended)</td>
+                </tr>
+                <tr>
+                    <td><strong>FAQ</strong></td>
+                    <td>Answer common questions, reduce support</td>
+                    <td>Complex products/services</td>
+                </tr>
+                <tr>
+                    <td><strong>Testimonials</strong></td>
+                    <td>Social proof, build trust</td>
+                    <td>Service-based businesses</td>
+                </tr>
+                <tr>
+                    <td><strong>Portfolio/Case Studies</strong></td>
+                    <td>Showcase work, demonstrate results</td>
+                    <td>Agencies, freelancers, consultants</td>
+                </tr>
+                <tr>
+                    <td><strong>Privacy Policy</strong></td>
+                    <td>Legal compliance, data protection</td>
+                    <td>ALL websites (legally required)</td>
+                </tr>
+                <tr>
+                    <td><strong>Terms of Service</strong></td>
+                    <td>Legal protection, user agreements</td>
+                    <td>E-commerce, SaaS, membership sites</td>
+                </tr>
+                <tr>
+                    <td><strong>Sitemap</strong></td>
+                    <td>SEO, easy navigation</td>
+                    <td>Large websites (20+ pages)</td>
+                </tr>
+                <tr>
+                    <td><strong>404 Error Page</strong></td>
+                    <td>Guide lost visitors, maintain UX</td>
+                    <td>ALL websites (custom version)</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="highlight-box">
+            <strong>Key Takeaway:</strong> Start with essential pages, then add others based on your specific business needs and user feedback.
+        </div>
+    </div>
+
+    <footer>
+        <p>Contact: sherrost@yahoo.com | Tel: 01501827070 - 01017776756</p>
+        <p>Produce a Website • Week 4 - Essential Website Pages</p>
+    </footer>
+
+    <script>
+        function showStep(index) {
+            document.querySelectorAll('.step-node').forEach((node, i) => {
+                if (i === index) { node.classList.add('active'); } 
+                else { node.classList.remove('active'); }
+            });
+            document.querySelectorAll('.step-content').forEach((content, i) => {
+                if (i === index) { content.classList.add('active'); } 
+                else { content.classList.remove('active'); }
+            });
+        }
+    </script>
+    <script>
+        (function() {
+          const savedTheme = localStorage.getItem('theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        const html = document.documentElement;
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', currentTheme);
+        if (currentTheme === 'light') {
+          sunIcon.style.display = 'none';
+          moonIcon.style.display = 'block';
+        }
+        themeToggle.addEventListener('click', function() {
+          const theme = html.getAttribute('data-theme');
+          const newTheme = theme === 'dark' ? 'light' : 'dark';
+          html.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          if (newTheme === 'light') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+          } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+          }
+        });
+    </script>
+</body>
+</html>

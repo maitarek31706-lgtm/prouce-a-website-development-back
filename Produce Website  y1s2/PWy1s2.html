@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Produce a Website Course</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+--bg-primary:#050a18;
+--bg-card:#0b1122;
+--bg-card-hover:#0e162d;
+--text-main:#fff;
+--text-muted:#94a3b8;
+--border-color:#1e293b;
+--accent-blue:#3b82f6;
+--accent-purple:#a855f7;
+--accent-green:#10b981;
+--accent-cyan:#4ed9c2;
+--color-title-blue:#92a9ff;
+--surface:#0b1f3a;
+--topbar-bg:rgba(11,31,58,.6);
+--gradient-start:#071426;
+--gradient-end:#050a18;
+}
+
+body.light-mode {
+--bg-primary:#ffffff;
+--bg-card:#f8fafc;
+--bg-card-hover:#f1f5f9;
+--text-main:#0f172a;
+--text-muted:#64748b;
+--border-color:#e2e8f0;
+--color-title-blue:#1e40af;
+--surface:#e0e7ff;
+--topbar-bg:rgba(248,250,252,.9);
+--gradient-start:#f8fafc;
+--gradient-end:#e0e7ff;
+}
+
+body{
+margin:0;
+font-family:'Segoe UI',Arial,sans-serif;
+background:linear-gradient(var(--gradient-start),var(--gradient-end));
+color:var(--text-main);
+transition:all .3s ease;
+min-height:100vh;
+}
+
+.topbar{
+position:fixed;
+top:0;
+width:100%;
+backdrop-filter:blur(12px);
+background:var(--topbar-bg);
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 25px;
+z-index:1000;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo{
+width:50px;
+height:50px;
+border-radius:10px;
+border:2px solid var(--accent-blue);
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+color:var(--text-main);
+}
+
+.toggle{
+cursor:pointer;
+padding:8px 15px;
+border-radius:8px;
+border:1px solid var(--border-color);
+background:var(--bg-card);
+color:var(--text-main);
+transition:all .3s ease;
+}
+
+.toggle:hover{
+background:var(--bg-card-hover);
+}
+
+.container{
+max-width:900px;
+margin:120px auto;
+padding:20px;
+}
+
+.header span{
+color:var(--accent-cyan);
+letter-spacing:3px;
+font-size:12px;
+font-weight:600;
+}
+
+.header h1{
+font-size:3rem;
+color:var(--color-title-blue);
+margin:10px 0;
+}
+
+.header p{
+color:var(--text-muted);
+}
+
+.timeline{
+position:relative;
+padding-left:50px;
+}
+
+.timeline::before{
+content:'';
+position:absolute;
+left:15px;
+top:0;
+width:2px;
+height:100%;
+background:linear-gradient(#3b82f6,#a855f7,#10b981,#4ed9c2);
+}
+
+.lesson{
+margin-bottom:40px;
+position:relative;
+}
+
+.dot{
+position:absolute;
+left:-3px;
+top:25px;
+width:18px;
+height:18px;
+border-radius:50%;
+background:var(--bg-primary);
+border:3px solid;
+}
+
+.blue{border-color:#3b82f6;}
+.purple{border-color:#a855f7;}
+.green{border-color:#10b981;}
+.cyan{border-color:#4ed9c2;}
+
+.card{
+background:var(--bg-card);
+border:1px solid var(--border-color);
+border-radius:15px;
+padding:25px 35px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+transition:all .3s ease;
+}
+
+.card:hover{
+background:var(--bg-card-hover);
+transform:scale(1.02);
+box-shadow:0 4px 20px rgba(0,0,0,0.1);
+}
+
+.card h3{
+color:var(--text-main);
+margin:0 0 8px 0;
+}
+
+.card p{
+color:var(--text-muted);
+margin:0;
+}
+
+.view{
+border:1px solid var(--accent-cyan);
+color:var(--accent-cyan);
+padding:8px 15px;
+border-radius:6px;
+cursor:pointer;
+transition:all .3s ease;
+text-decoration:none;
+display:inline-block;
+font-weight:500;
+}
+
+.view:hover{
+background:var(--accent-cyan);
+color:#fff;
+}
+
+body.light-mode .view:hover{
+color:#0f172a;
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+<div style="display:flex;gap:15px;align-items:center;">
+<div class="logo"><a href="../../../../index.html"><img src="../../../../logo.jpeg" alt="Logo" style="width:50px;height:50px;border-radius:10px;"></a></div>
+<b>Digital Marketing</b>
+</div>
+<div class="toggle" onclick="toggleTheme()">Toggle Theme</div>
+</div>
+<div class="container">
+<div class="header">
+<span>SYLLABUS</span>
+<h1>Produce a Website</h1>
+<p>Professional Website Planning & Development Course</p>
+</div>
+<div class="timeline" id="timeline"></div>
+</div>
+<script>
+const lessons = [
+["Website Planning & Goal Setting","Define objectives and identify your target audience"],
+["Domain, Hosting & Website Builders","Choose the right technical foundation for your website"],
+["Datasets & Data Management","Master data fundamentals for web development"],
+["Essential Website Pages","Create conversion-optimized website structure"]
+];
+const colors=["blue","purple","green","cyan"];
+const weekPages=["week1.html","week2.html","week3.html","week4.html"];
+const timeline=document.getElementById("timeline");
+
+lessons.forEach((l,i)=>{
+timeline.innerHTML+=`
+<div class="lesson">
+<div class="dot ${colors[i]}"></div>
+<div class="card">
+<div>
+<h3>${l[0]}</h3>
+<p>${l[1]}</p>
+</div>
+<a href="${weekPages[i]}" class="view">VIEW LESSON</a>
+</div>
+</div>
+`;
+});
+
+function toggleTheme(){
+document.body.classList.toggle('light-mode');
+}
+</script>
+</body>
+</html>
